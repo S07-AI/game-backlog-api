@@ -11,9 +11,6 @@ namespace GameBacklog.Models
         public string Title { get; set; } = string.Empty;
 
         [Required]
-        public string Platform { get; set; } = string.Empty;
-
-        [Required]
         public string Genre { get; set; } = string.Empty;
 
         [Required]
@@ -22,6 +19,9 @@ namespace GameBacklog.Models
 
         [Range(0,20000)]
         public int HoursPlayed { get; set; }
+
+        public int PlatformId { get; set; }
+        public Platform? Platform { get; set; }
         
         [Range(1,10)]
         public int Rating { get; set; }

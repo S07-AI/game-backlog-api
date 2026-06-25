@@ -17,15 +17,15 @@ namespace GameBacklog.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromQuery] string? status, [FromQuery] string? platform, [FromQuery] string? genre, [FromQuery] string? sort)
+        public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromQuery] string? status, [FromQuery] int? platform, [FromQuery] string? genre, [FromQuery] string? sort)
         {
             var query = _context.Games.AsQueryable();
 
             if (!string.IsNullOrEmpty(status))
                 query = query.Where(g=> g.Status == status);
 
-            if (!string.IsNullOrEmpty(platform))
-                query = query.Where(g=> g.Platform == platform);
+            if (platform.HasValue)
+                query = query.Where(g=> g.PlatformId == platform);
             
             if (!string.IsNullOrEmpty(genre))
                 query = query.Where(g=> g.Genre == genre);
