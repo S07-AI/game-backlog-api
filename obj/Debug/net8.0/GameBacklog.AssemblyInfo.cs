@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GameBacklog")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65ae59cde76e760822662df1a4842ea19be47aae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf587b62f0b82dc4b3703baaf06ec3382c337392")]
 [assembly: System.Reflection.AssemblyProductAttribute("GameBacklog")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GameBacklog")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

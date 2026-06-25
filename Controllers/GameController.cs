@@ -17,9 +17,25 @@ namespace GameBacklog.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGames()
+        public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromQuery] string? status, [FromQuery] string? platform, [FromQuery] string? genre, [FromQuery] string? sort)
         {
-            return await _context.Games.ToListAsync(); //go to the Games table in PostgreSQL, grab everything, and return it as a list.
+            var query = _context.Games.AsQueryable();
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(g=> g.Status == status);
+
+            if (!string.IsNullOrEmpty(platform))
+                query = query.Where(g=> g.Platform == platform);
+            
+            if (!string.IsNullOrEmpty(genre))
+                query = query.Where(g=> g.Genre == genre);
+            
+            if (sort == "rating")
+                query = query.OrderByDescending(g=> g.Rating);
+            else if(sort == "hoursPlayed")
+                query = query.OrderByDescending(g=> g.HoursPlayed);
+
+            return await query.ToListAsync();//go to the Games table in PostgreSQL, grab everything, and return it as a list.
         }
 
         [HttpGet("{id}")]
@@ -90,6 +106,17 @@ namespace GameBacklog.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Game>>> SearchGames([FromQuery] string q)
+        {
+            if (string.IsNullOrEmpty(q))
+                return BadRequest("Search query cannot be empty");
+
+            var results = await _context.Games.Where(g=> g.Title.ToLower().Contains(q.ToLower())).ToListAsync();
+
+            return results;
         }
     }
 }
