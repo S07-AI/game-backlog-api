@@ -22,9 +22,13 @@ namespace GameBacklog.Controllers
 
             var gamesByStatus = await _context.Games.GroupBy(g=> g.Status).Select(group=> new {Status = group.Key, Count = group.Count()}).ToListAsync();
 
-            var averageRating = await _context.Games
+            var completedGames = await _context.Games
                 .Where(g => g.Status == "Completed")
-                .AverageAsync(g => g.Rating);
+                .ToListAsync();
+
+            double? averageRating = completedGames.Count > 0
+                ? completedGames.Average(g => g.Rating)
+                : null;
 
             var totalHours = await _context.Games.SumAsync(g => g.HoursPlayed);
 
