@@ -18,9 +18,17 @@ string connectionString;
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 Console.WriteLine($"[DEBUG] DATABASE_URL present: {!string.IsNullOrEmpty(databaseUrl)}");
-if (!string.IsNullOrEmpty(databaseUrl))
+
+Console.WriteLine("[DEBUG] All env var names containing DATA, PG, or RAILWAY:");
+foreach (System.Collections.DictionaryEntry entry in Environment.GetEnvironmentVariables())
 {
-    Console.WriteLine($"[DEBUG] DATABASE_URL starts with: {databaseUrl.Substring(0, Math.Min(20, databaseUrl.Length))}...");
+    var key = entry.Key?.ToString() ?? "";
+    if (key.Contains("DATA", StringComparison.OrdinalIgnoreCase) ||
+        key.Contains("PG", StringComparison.OrdinalIgnoreCase) ||
+        key.StartsWith("RAILWAY", StringComparison.OrdinalIgnoreCase))
+    {
+        Console.WriteLine($"[DEBUG]   {key}");
+    }
 }
 
 if (!string.IsNullOrEmpty(databaseUrl))
