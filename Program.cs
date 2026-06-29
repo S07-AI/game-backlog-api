@@ -17,6 +17,12 @@ builder.Services.AddSwaggerGen();
 string connectionString;
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
+Console.WriteLine($"[DEBUG] DATABASE_URL present: {!string.IsNullOrEmpty(databaseUrl)}");
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    Console.WriteLine($"[DEBUG] DATABASE_URL starts with: {databaseUrl.Substring(0, Math.Min(20, databaseUrl.Length))}...");
+}
+
 if (!string.IsNullOrEmpty(databaseUrl))
 {
     var uri = new Uri(databaseUrl);
