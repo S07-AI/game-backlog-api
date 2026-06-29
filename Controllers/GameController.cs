@@ -19,7 +19,7 @@ namespace GameBacklog.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGames([FromQuery] string? status, [FromQuery] int? platform, [FromQuery] string? genre, [FromQuery] string? sort)
         {
-            var query = _context.Games.AsQueryable();
+            var query = _context.Games.Include(g => g.Platform).AsQueryable();
 
             if (!string.IsNullOrEmpty(status))
                 query = query.Where(g=> g.Status == status);
@@ -41,7 +41,7 @@ namespace GameBacklog.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Game>> GetGame(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _context.Games.Include(g => g.Platform).FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null) 
                 return NotFound();
@@ -114,7 +114,7 @@ namespace GameBacklog.Controllers
             if (string.IsNullOrEmpty(q))
                 return BadRequest("Search query cannot be empty");
 
-            var results = await _context.Games.Where(g=> g.Title.ToLower().Contains(q.ToLower())).ToListAsync();
+            var results = await _context.Games.Include(g => g.Platform).Where(g=> g.Title.ToLower().Contains(q.ToLower())).ToListAsync();
 
             return results;
         }

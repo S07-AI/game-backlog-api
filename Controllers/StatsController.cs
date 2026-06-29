@@ -28,13 +28,24 @@ namespace GameBacklog.Controllers
 
             var totalHours = await _context.Games.SumAsync(g => g.HoursPlayed);
 
-            var mostPlayedPlatform = await _context.Games
+            var mostPlayedPlatformGroup = await _context.Games
                 .GroupBy(g => g.PlatformId)
                 .Select(group => new { PlatformId = group.Key, Count = group.Count() })
                 .OrderByDescending(g => g.Count)
                 .FirstOrDefaultAsync();
 
-        
+            object mostPlayedPlatform = null;
+            if (mostPlayedPlatformGroup != null)
+            {
+                var platform = await _context.Platforms.FindAsync(mostPlayedPlatformGroup.PlatformId);
+                mostPlayedPlatform = new
+                {
+                    PlatformId = mostPlayedPlatformGroup.PlatformId,
+                    PlatformName = platform?.Name ?? "Unknown",
+                    Count = mostPlayedPlatformGroup.Count
+                };
+            }
+
             return Ok(new
             {
                 TotalGames = totalGames,
